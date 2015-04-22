@@ -20,23 +20,27 @@ def find_path(source, destination, mesh):
 
 	queue = [(dist[sourceBox],sourceBox,source)]
 	prev[sourceBox] = None
-
-	while queue:
-		currentBox = heappop(queue)
-
-		if in_box(destination, currentBox): 
-			destBox = currentBox[1]
-			break
-		
-		for next_box in mesh['adj'][currentBox[1]]:
-			alt = dist[currentBox[1]] + coor_distance((currentBox[2][0],currentBox[2][1]), find_detail_points((currentBox[2][0],currentBox[2][1]), next_box))
-			
-			if next_box not in prev or alt < dist[next_box]:
-				dist[next_box] = alt
-				priority = alt  + heuristic(destination, find_detail_points((currentBox[2][0],currentBox[2][1]), next_box))
-				prev[next_box] = currentBox[1]
-				heappush(queue,(priority, next_box, find_detail_points((currentBox[2][0],currentBox[2][1]), next_box)))
 	
+	try:
+		while queue:
+			currentBox = heappop(queue)
+
+			if in_box(destination, currentBox): 
+				destBox = currentBox[1]
+				break
+			
+			for next_box in mesh['adj'][currentBox[1]]:
+				alt = dist[currentBox[1]] + coor_distance((currentBox[2][0],currentBox[2][1]), find_detail_points((currentBox[2][0],currentBox[2][1]), next_box))
+				
+				if next_box not in prev or alt < dist[next_box]:
+					dist[next_box] = alt
+					priority = alt  + heuristic(destination, find_detail_points((currentBox[2][0],currentBox[2][1]), next_box))
+					prev[next_box] = currentBox[1]
+					heappush(queue,(priority, next_box, find_detail_points((currentBox[2][0],currentBox[2][1]), next_box)))
+	except:
+			print "Not a valid starting point."
+			return ([], [])
+
 	if in_box(destination, currentBox):
 		currentBox = currentBox[1]
 		while currentBox != sourceBox:
